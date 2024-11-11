@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:color_switch_game/components/ground.dart';
 import 'package:color_switch_game/components/player.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -20,7 +21,8 @@ class MyGame extends FlameGame with TapCallbacks {
 
   @override
   void onMount() {
-    world.add(myPlayer = Player());
+    world.add(Ground(position: Vector2(0, 400)));
+    world.add(myPlayer = Player(position: Vector2(0, 250)));
     super.onMount();
   }
 

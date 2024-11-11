@@ -1,8 +1,11 @@
+import 'package:color_switch_game/components/ground.dart';
+import 'package:color_switch_game/my_game.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
-class Player extends PositionComponent {
+class Player extends PositionComponent with HasGameRef<MyGame> {
   Player({
+    required super.position,
     this.playerRadius = 15,
   });
 
@@ -14,7 +17,6 @@ class Player extends PositionComponent {
 
   @override
   void onMount() {
-    position = Vector2.zero();
     size = Vector2.all(playerRadius * 2);
     anchor = Anchor.center;
     super.onMount();
@@ -24,7 +26,15 @@ class Player extends PositionComponent {
   void update(double dt) {
     super.update(dt);
     position += _velocity * dt;
-    _velocity.y += _gravity * dt;
+
+    Ground ground = gameRef.findByKeyName(Ground.keyName)!;
+
+    if (positionOfAnchor(Anchor.bottomCenter).y > ground.position.y) {
+      _velocity.setValues(0, 0);
+      position = Vector2(0, ground.position.y - (height / 2));
+    } else {
+      _velocity.y += _gravity * dt;
+    }
   }
 
   @override
