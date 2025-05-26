@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 class Ground extends PositionComponent {
   static const String keyName = 'single_ground_key';
 
+  late Sprite fingerSprite;
+  
   Ground({required super.position})
       : super(
           size: Vector2(200, 2),
@@ -11,7 +13,6 @@ class Ground extends PositionComponent {
           key: ComponentKey.named(keyName),
         );
 
-  late Sprite fingerSprite;
 
   @override
   Future<void> onLoad() async {

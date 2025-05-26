@@ -1,10 +1,13 @@
-import 'package:color_switch_game/my_game.dart';
+import 'package:color_switch_game/src/components/circle_arc.dart';
+import 'package:color_switch_game/src/my_game.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class CircleRotator extends PositionComponent with HasGameRef<MyGame> {
+  final double thickness;
+  final double rotationSpeed;
+
   CircleRotator({
     required super.position,
     required super.size,
@@ -12,9 +15,6 @@ class CircleRotator extends PositionComponent with HasGameRef<MyGame> {
     this.rotationSpeed = 2,
   })  : assert(size!.x == size.y),
         super(anchor: Anchor.center);
-
-  final double thickness;
-  final double rotationSpeed;
 
   @override
   void onLoad() {
@@ -36,38 +36,5 @@ class CircleRotator extends PositionComponent with HasGameRef<MyGame> {
         infinite: true,
       ),
     ));
-  }
-}
-
-class CircleArc extends PositionComponent with ParentIsA<CircleRotator> {
-  final Color color;
-  final double startAngle;
-  final double sweepAngle;
-
-  CircleArc({
-    required this.color,
-    required this.startAngle,
-    required this.sweepAngle,
-  }) : super(anchor: Anchor.center);
-
-  @override
-  void onMount() {
-    size = parent.size;
-    position = size / 2;
-    super.onMount();
-  }
-
-  @override
-  void render(Canvas canvas) {
-    canvas.drawArc(
-      size.toRect().deflate(parent.thickness / 2),
-      startAngle,
-      sweepAngle,
-      false,
-      Paint()
-        ..color = color
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = parent.thickness,
-    );
   }
 }

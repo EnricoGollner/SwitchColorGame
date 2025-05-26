@@ -1,12 +1,13 @@
-import 'package:color_switch_game/components/circle_rotator.dart';
-import 'package:color_switch_game/components/ground.dart';
-import 'package:color_switch_game/components/player.dart';
+import 'package:color_switch_game/src/components/circle_rotator.dart';
+import 'package:color_switch_game/src/components/color_switcher.dart';
+import 'package:color_switch_game/src/components/ground.dart';
+import 'package:color_switch_game/src/components/player.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-class MyGame extends FlameGame with TapCallbacks {
+class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
   late Player myPlayer;
 
   final List<Color> gameColors;
@@ -18,8 +19,7 @@ class MyGame extends FlameGame with TapCallbacks {
       Colors.blueAccent,
       Colors.yellowAccent,
     ],
-  })
-      : super(
+  }) : super(
           camera: CameraComponent.withFixedResolution(
             width: 600,
             height: 1000,
@@ -51,13 +51,32 @@ class MyGame extends FlameGame with TapCallbacks {
     myPlayer.jump();
     super.onTapDown(event);
   }
-  
+
+  void _initializeGame() {
+    world.add(Ground(position: Vector2(0, 400)));
+    world.add(myPlayer = Player(position: Vector2(0, 250)));
+    camera.moveTo(Vector2(0, 0));
+    _generateGameComponents();
+  }
+
   void _generateGameComponents() {
-    world.add(
-      CircleRotator(
-        position: Vector2(0, 100),
-        size: Vector2(200, 200),
-      ),
-    );
+    world.add(ColorSwitcher(position: Vector2(0, 180)));
+    world.add(CircleRotator(
+      position: Vector2(0, 0),
+      size: Vector2(200, 200),
+    ));
+
+    world.add(ColorSwitcher(position: Vector2(0, -200)));
+    world.add(CircleRotator(
+      position: Vector2(0, -400),
+      size: Vector2(150, 150),
+    ));
+  }
+
+  void gameOver() {
+    for (var element in world.children) {
+      element.removeFromParent();
+    }
+    _initializeGame();
   }
 }
