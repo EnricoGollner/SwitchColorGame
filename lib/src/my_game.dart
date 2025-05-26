@@ -79,4 +79,14 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
     }
     _initializeGame();
   }
+
+  bool get isGamePaused => paused;
+
+  void pauseGame() {
+    pauseEngine();
+  }
+
+  void resumeGame() {
+    resumeGame();
+  }
 }
