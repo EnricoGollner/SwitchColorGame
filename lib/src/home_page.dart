@@ -27,7 +27,8 @@ class _HomePageState extends State<HomePage> {
           GameWidget(game: _myGame),
           Visibility(
             visible: _myGame.isGamePaused,
-            replacement:  Align(
+            replacement:  Container(
+              padding: const EdgeInsets.only(top: 20),
               alignment: Alignment.topLeft,
               child: IconButton(
                 onPressed: () => setState(() => _myGame.pauseGame()),
