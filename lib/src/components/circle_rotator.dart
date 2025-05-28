@@ -18,8 +18,6 @@ class CircleRotator extends PositionComponent with HasGameRef<MyGame> {
 
   @override
   void onLoad() {
-    super.onLoad();
-
     const circle = math.pi * 2;
     final sweep = circle / gameRef.gameColors.length;
     for (int i = 0; i < gameRef.gameColors.length; i++) {
@@ -36,5 +34,7 @@ class CircleRotator extends PositionComponent with HasGameRef<MyGame> {
         infinite: true,
       ),
     ));
+
+    super.onLoad();
   }
 }

@@ -13,7 +13,7 @@ class Player extends PositionComponent with HasGameRef<MyGame>, CollisionCallbac
   final _jumpSpeed = 350.0;
   final double playerRadius;
 
-  Color _color = Colors.yellowAccent;
+  Color _color = Colors.white;
   
   Player({
     required super.position,
@@ -29,6 +29,7 @@ class Player extends PositionComponent with HasGameRef<MyGame>, CollisionCallbac
       collisionType: CollisionType.active,
     ));
   }
+
 
   @override
   void onMount() {
@@ -62,9 +63,7 @@ class Player extends PositionComponent with HasGameRef<MyGame>, CollisionCallbac
     );
   }
 
-  void jump() {
-    _velocity.y = -_jumpSpeed;
-  }
+  void jump() => _velocity.y = -_jumpSpeed;
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
@@ -79,7 +78,5 @@ class Player extends PositionComponent with HasGameRef<MyGame>, CollisionCallbac
     }
   }
 
-  void _changeColorRandomly() {
-    _color = gameRef.gameColors.random();
-  }
+  void _changeColorRandomly() => _color = gameRef.gameColors.random();
 }

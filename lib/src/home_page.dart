@@ -12,7 +12,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late MyGame _myGame;
 
-
   @override
   void initState() {
     _myGame = MyGame();
@@ -54,10 +53,10 @@ class _HomePageState extends State<HomePage> {
                       height: 140,
                       child: IconButton(
                         onPressed: () => setState(() => _myGame.resumeGame()),
-                          icon: const Icon(
-                            Icons.play_arrow,
-                            size: 140,
-                          )
+                        icon: const Icon(
+                          Icons.play_arrow,
+                          size: 140,
+                        ),
                       ),
                     ),
                   ],

@@ -5,6 +5,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
+///Created to build [CircleRotator]
 class CircleArc extends PositionComponent with ParentIsA<CircleRotator> {
   final Color color;
   final double startAngle;
