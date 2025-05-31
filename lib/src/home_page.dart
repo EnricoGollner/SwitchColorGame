@@ -25,23 +25,49 @@ class _HomePageState extends State<HomePage> {
         children: [
           GameWidget(game: _myGame),
           Visibility(
-            visible: _myGame.isGamePaused,
-            replacement:  Container(
-              padding: const EdgeInsets.only(top: 20),
+            visible: !_myGame.isGamePaused,
+            child: Align(
               alignment: Alignment.topLeft,
-              child: IconButton(
-                onPressed: () => setState(() => _myGame.pauseGame()),
-                icon: const Icon(Icons.pause),
+              child: SafeArea(
+                child: IconButton(
+                  onPressed: () => setState(() => _myGame.pauseGame()),
+                  icon: const Icon(Icons.pause),
+                ),
               ),
             ),
-            child: Container(
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: SafeArea(
+              child: ValueListenableBuilder(
+                valueListenable: _myGame.currentScore,
+                builder: (context, int value, child) {
+                  return Text(
+                    'Score: $value',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black,
+                          blurRadius: 4,
+                        )
+                      ]
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          if (_myGame.isGamePaused)
+            Container(
               color: Colors.black45,
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      'PAUSED',
+                      'PAUSED!',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 48,
@@ -63,7 +89,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

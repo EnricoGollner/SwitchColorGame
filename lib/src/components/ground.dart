@@ -13,7 +13,6 @@ class Ground extends PositionComponent {
           key: ComponentKey.named(keyName),
         );
 
-
   @override
   Future<void> onLoad() async {
     await super.onLoad();
