@@ -81,7 +81,7 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDeco
     FlameAudio.bgm.play('background.mp3');
   }
 
- void _generateGameComponents() {
+  void _generateGameComponents() {
     world.add(ColorSwitcher(position: Vector2(0, 180)));
     world.add(CircleRotator(
       position: Vector2(0, 0),
