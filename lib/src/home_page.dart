@@ -1,3 +1,4 @@
+import 'package:color_switch_game/src/audio/audio_manager.dart';
 import 'package:color_switch_game/src/my_game.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    _myGame = MyGame();
+    _myGame = MyGame(audioManager: AudioManager());
     super.initState();
   }
 

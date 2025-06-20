@@ -1,3 +1,4 @@
+import 'package:color_switch_game/src/audio/audio_manager.dart';
 import 'package:color_switch_game/src/components/circle_rotator.dart';
 import 'package:color_switch_game/src/components/color_switcher.dart';
 import 'package:color_switch_game/src/components/ground.dart';
@@ -8,12 +9,11 @@ import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/rendering.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 
 class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDecorator, HasTimeScale {
+  late final AudioManager audioManager;
   late Player myPlayer;
-
   final List<Color> gameColors;
   final ValueNotifier<int> currentScore = ValueNotifier(0);
 
@@ -24,6 +24,7 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDeco
       Colors.blueAccent,
       Colors.yellowAccent,
     ],
+    required this.audioManager
   }) : super(
           camera: CameraComponent.withFixedResolution(
             width: 600,
@@ -37,28 +38,24 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDeco
   @override
   Future<void> onLoad() async {
     decorator = PaintDecorator.blur(0);
-    FlameAudio.bgm.initialize();
     await Flame.images.loadAll([
       'finger_tap.png',
       'star_icon.png',
     ]);
-    await FlameAudio.audioCache.loadAll([
-      'background.mp3',
-      'collect.wav',
-    ]);
+    await audioManager.initialize();
     super.onLoad();
   }
 
   @override
-  void onMount() {
-    _initializeGame();
+  void onMount() async {
+    await initializeGame();
     super.onMount();
   }
 
   @override
   void update(double dt) {
-    final cameraY = camera.viewfinder.position.y;
-    final playerY = myPlayer.position.y;
+    final double cameraY = camera.viewfinder.position.y;
+    final double playerY = myPlayer.position.y;
 
     if (playerY < cameraY) {
       camera.viewfinder.position = Vector2(0, playerY);
@@ -67,18 +64,15 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDeco
   }
 
   @override
-  void onTapDown(TapDownEvent event) {
-    myPlayer.jump();
-    super.onTapDown(event);
-  }
+  void onTapDown(TapDownEvent event) => myPlayer.jump();
 
-  void _initializeGame() {
+  Future<void> initializeGame() async {
     currentScore.value = 0;
     world.add(Ground(position: Vector2(0, 400)));
     world.add(myPlayer = Player(position: Vector2(0, 250)));
     camera.moveTo(Vector2(0, 0));
     _generateGameComponents();
-    FlameAudio.bgm.play('background.mp3');
+    await audioManager.playBackground();
   }
 
   void _generateGameComponents() {
@@ -87,9 +81,7 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDeco
       position: Vector2(0, 0),
       size: Vector2(200, 200),
     ));
-    world.add(StarComponent(
-      position: Vector2(0, 0),
-    ));
+    world.add(StarComponent(position: Vector2(0, 0)));
 
     world.add(ColorSwitcher(position: Vector2(0, -200)));
     world.add(CircleRotator(
@@ -100,9 +92,7 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDeco
       position: Vector2(0, -400),
       size: Vector2(180, 180),
     ));
-    world.add(StarComponent(
-      position: Vector2(0, -400),
-    ));
+    world.add(StarComponent(position: Vector2(0, -400)));
 
     world.add(ColorSwitcher(position: Vector2(0, -580)));
 
@@ -110,9 +100,7 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDeco
       position: Vector2(0, -750),
       size: Vector2(180, 180),
     ));
-    world.add(StarComponent(
-      position: Vector2(0, -750),
-    ));
+    world.add(StarComponent(position: Vector2(0, -750)));
 
     world.add(ColorSwitcher(position: Vector2(0, -950)));
 
@@ -124,31 +112,27 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDeco
       position: Vector2(0, -1150),
       size: Vector2(210, 210),
     ));
-    world.add(StarComponent(
-      position: Vector2(0, -1150),
-    ));
+    world.add(StarComponent(position: Vector2(0, -1150)));
   }
 
-  void gameOver() {
-    FlameAudio.bgm.stop();
-    for (var element in world.children) {
-      element.removeFromParent();
-    }
-    _initializeGame();
+  Future<void> gameOver() async {
+    await audioManager.stopBackground();
+    world.removeAll(world.children);
+    await initializeGame();
   }
 
   bool get isGamePaused => timeScale == 0.0;
 
-  void pauseGame() {
+  Future<void> pauseGame() async {
     (decorator as PaintDecorator).addBlur(10);
     timeScale = 0.0;
-    FlameAudio.bgm.pause();
+    await audioManager.pauseBackground();
   }
 
-  void resumeGame() {
+  Future<void> resumeGame() async {
     (decorator as PaintDecorator).addBlur(0);
     timeScale = 1.0;
-    FlameAudio.bgm.resume();
+    await audioManager.resumeBackground();
   }
 
   void increaseScore() => currentScore.value++;
