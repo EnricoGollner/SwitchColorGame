@@ -18,9 +18,9 @@ class Player extends PositionComponent with HasGameReference<MyGame>, CollisionC
           priority: 20,
         );
 
-  final _velocity = Vector2.zero();
-  final _gravity = 980.0;
-  final _jumpSpeed = 350.0;
+  final Vector2 _velocity = Vector2.zero();
+  final double _gravity = 980.0;
+  final double _jumpSpeed = 350.0;
 
   final double playerRadius;
 
@@ -49,8 +49,7 @@ class Player extends PositionComponent with HasGameReference<MyGame>, CollisionC
     super.update(dt);
     position += _velocity * dt;
 
-    Ground ground = game.findByKeyName(Ground.keyName)!;
-
+    final Ground ground = game.findByKeyName(Ground.keyName)!;
     if (positionOfAnchor(Anchor.bottomCenter).y > ground.position.y) {
       _velocity.setValues(0, 0);
       position = Vector2(0, ground.position.y - (height / 2));
@@ -69,9 +68,7 @@ class Player extends PositionComponent with HasGameReference<MyGame>, CollisionC
     );
   }
 
-  void jump() {
-    _velocity.y = -_jumpSpeed;
-  }
+  void jump() => _velocity.y = -_jumpSpeed;
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {

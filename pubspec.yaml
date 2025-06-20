@@ -11,10 +11,12 @@ dependencies:
     sdk: flutter
   flame: ^1.21.0
   flame_audio: ^2.11.6
+  mocktail: ^1.0.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flame_test: ^1.19.2
   flutter_lints: ^6.0.0
 
 flutter:
